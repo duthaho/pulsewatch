@@ -1,0 +1,38 @@
+# Docker Compose override for local development
+# This file is automatically loaded by Docker Compose and overrides settings in docker-compose.yml
+# Use this for local development customizations without modifying the main docker-compose.yml
+
+version: '3.9'
+
+services:
+  web:
+    # Override command to use Django development server with hot reload
+    command: python manage.py runserver 0.0.0.0:8000
+
+    # Development-specific environment variables
+    environment:
+      - DEBUG=True
+      - DJANGO_SETTINGS_MODULE=core.settings.dev
+      - CELERY_TASK_ALWAYS_EAGER=True
+
+    # Mount source code for hot reload
+    volumes:
+      - .:/app
+      - /app/.venv  # Exclude virtual environment from sync
+
+    # Enable stdin and tty for interactive debugging
+    stdin_open: true
+    tty: true
+
+  db:
+    # Expose MySQL port for local database clients
+    ports:
+      - "3306:3306"
+
+    # Use faster fsync mode for development (not for production!)
+    command: --innodb-flush-log-at-trx-commit=2 --innodb-flush-method=O_DIRECT
+
+  redis:
+    # Expose Redis port for local Redis clients
+    ports:
+      - "6379:6379"

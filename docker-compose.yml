@@ -1,0 +1,78 @@
+version: '3.9'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pulsewatch_web
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      - DJANGO_SETTINGS_MODULE=core.settings.dev
+      - DATABASE_URL=mysql://pulsewatch:pulsewatch@db:3306/pulsewatch_dev
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      - pulsewatch_network
+    restart: unless-stopped
+
+  db:
+    image: mysql:8.0
+    container_name: pulsewatch_db
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-rootpassword}
+      - MYSQL_DATABASE=${MYSQL_DATABASE:-pulsewatch_dev}
+      - MYSQL_USER=${MYSQL_USER:-pulsewatch}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD:-pulsewatch}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-rootpassword}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - pulsewatch_network
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: pulsewatch_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks:
+      - pulsewatch_network
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
+    name: pulsewatch_mysql_data
+  redis_data:
+    name: pulsewatch_redis_data
+
+networks:
+  pulsewatch_network:
+    name: pulsewatch_network
+    driver: bridge

@@ -1,0 +1,20 @@
+# Base dependencies for PulseWatch
+# Python 3.12+ required
+
+# Django framework
+Django>=5.0,<5.1
+djangorestframework>=3.14,<3.15
+
+# Environment and configuration
+django-environ>=0.11.2
+
+# Database
+mysqlclient>=2.2.0
+
+# Cache and task queue
+redis>=5.0.0
+celery>=5.3.0
+
+# Observability
+structlog>=23.2.0
+django-prometheus>=2.3.1
