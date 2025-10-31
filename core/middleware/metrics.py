@@ -3,6 +3,7 @@ Custom Prometheus metrics middleware for PulseWatch.
 
 Implements application-specific metrics on top of django-prometheus baseline.
 """
+
 import time
 from typing import Callable
 
@@ -12,36 +13,26 @@ from prometheus_client import Counter, Gauge, Histogram
 # Custom application metrics
 
 # Application info metric (always 1, used for version labeling)
-app_info = Gauge(
-    'pulsewatch_app_info',
-    'Application information',
-    ['version']
-)
+app_info = Gauge("pulsewatch_app_info", "Application information", ["version"])
 
 # Application start time
-app_start_time = Gauge(
-    'pulsewatch_app_start_time_seconds',
-    'Unix timestamp of application start'
-)
+app_start_time = Gauge("pulsewatch_app_start_time_seconds", "Unix timestamp of application start")
 
 # Health check metrics
 health_check_duration = Histogram(
-    'pulsewatch_health_check_duration_seconds',
-    'Health check execution time',
-    ['check_name'],
-    buckets=[0.01, 0.05, 0.1, 0.25, 0.5, 1.0, 2.5, 5.0]
+    "pulsewatch_health_check_duration_seconds",
+    "Health check execution time",
+    ["check_name"],
+    buckets=[0.01, 0.05, 0.1, 0.25, 0.5, 1.0, 2.5, 5.0],
 )
 
 health_check_status = Gauge(
-    'pulsewatch_health_check_status',
-    'Health check status (1=healthy, 0=unhealthy)',
-    ['check_name']
+    "pulsewatch_health_check_status", "Health check status (1=healthy, 0=unhealthy)", ["check_name"]
 )
 
 # Request metrics (additional to django-prometheus)
 active_requests = Gauge(
-    'pulsewatch_active_requests',
-    'Number of requests currently being processed'
+    "pulsewatch_active_requests", "Number of requests currently being processed"
 )
 
 # Initialize app metrics

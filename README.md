@@ -211,6 +211,56 @@ docker-compose logs db
 sudo chown -R $USER:$USER .
 ```
 
+## Optional: HTTPS for Local Development
+
+For testing HTTPS locally (e.g., testing secure cookies, SSL redirects), you can generate self-signed certificates:
+
+### Generate Self-Signed Certificate
+
+```bash
+# Create ssl directory
+mkdir -p docker/ssl
+
+# Generate certificate (valid for 365 days)
+openssl req -x509 -newkey rsa:4096 -nodes \
+  -keyout docker/ssl/key.pem \
+  -out docker/ssl/cert.pem \
+  -days 365 \
+  -subj "/CN=localhost"
+
+# Set permissions
+chmod 600 docker/ssl/key.pem
+chmod 644 docker/ssl/cert.pem
+```
+
+### Configure Django for HTTPS
+
+Update your `.env` file:
+
+```bash
+USE_HTTPS=True
+SECURE_SSL_REDIRECT=True
+SESSION_COOKIE_SECURE=True
+CSRF_COOKIE_SECURE=True
+```
+
+### Run with HTTPS
+
+```bash
+# Install django-sslserver (dev only)
+pip install django-sslserver
+
+# Add to INSTALLED_APPS in core/settings/dev.py
+# 'sslserver',
+
+# Run with SSL
+python manage.py runsslserver --certificate docker/ssl/cert.pem --key docker/ssl/key.pem
+```
+
+Your browser will warn about the self-signed certificate. Click "Advanced" → "Proceed to localhost (unsafe)" to continue.
+
+**Note**: Self-signed certificates are for local development only. Use proper certificates from Let's Encrypt or a CA in production.
+
 ## CI/CD
 
 GitHub Actions pipeline runs on every push:

@@ -3,23 +3,24 @@ Development settings for PulseWatch project.
 
 Extends base settings with development-specific configurations.
 """
+
 from .base import *  # noqa: F403, F401
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0', '*']
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "0.0.0.0", "*"]
 
 # Development-specific installed apps
 INSTALLED_APPS += [  # noqa: F405
-    'django_extensions',  # Useful development tools (if installed)
+    "django_extensions",  # Useful development tools (if installed)
 ]
 
 # Database - keep connection alive for development
-DATABASES['default']['CONN_MAX_AGE'] = 0  # noqa: F405
+DATABASES["default"]["CONN_MAX_AGE"] = 0  # noqa: F405
 
 # Email backend for development (console output)
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 # Django Debug Toolbar (optional - can be enabled if needed)
 # INSTALLED_APPS += ['debug_toolbar']

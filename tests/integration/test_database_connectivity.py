@@ -3,6 +3,7 @@ Integration test for database connectivity.
 
 Verifies that Django can connect to and query the database.
 """
+
 import pytest
 from django.contrib.auth import get_user_model
 from django.db import connection
@@ -34,18 +35,16 @@ class TestDatabaseConnectivity:
 
         # Create a test user
         user = User.objects.create_user(
-            username='dbtest',
-            email='dbtest@example.com',
-            password='testpass123'
+            username="dbtest", email="dbtest@example.com", password="testpass123"
         )
 
         # Verify user was created
         assert user.id is not None
-        assert user.username == 'dbtest'
-        assert user.email == 'dbtest@example.com'
+        assert user.username == "dbtest"
+        assert user.email == "dbtest@example.com"
 
         # Query the user from database
-        retrieved_user = User.objects.get(username='dbtest')
+        retrieved_user = User.objects.get(username="dbtest")
         assert retrieved_user.id == user.id
         assert retrieved_user.email == user.email
 
@@ -59,13 +58,11 @@ class TestDatabaseConnectivity:
 
         # Create a user in this test
         User.objects.create_user(
-            username='transactiontest',
-            email='transaction@example.com',
-            password='testpass123'
+            username="transactiontest", email="transaction@example.com", password="testpass123"
         )
 
         # Verify user exists in this transaction
-        assert User.objects.filter(username='transactiontest').exists()
+        assert User.objects.filter(username="transactiontest").exists()
 
         # After this test completes, pytest-django will rollback
         # the transaction, so this user won't exist in other tests

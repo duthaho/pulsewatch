@@ -3,6 +3,7 @@ Health check views for PulseWatch.
 
 Provides /healthz (liveness) and /ready (readiness) endpoints.
 """
+
 from datetime import datetime, timezone
 from typing import Any, Dict
 
@@ -19,7 +20,7 @@ from pulsewatch import __version__
 logger = structlog.get_logger(__name__)
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 @permission_classes([AllowAny])
 def healthz_view(request: Request) -> Response:
     """
@@ -36,9 +37,9 @@ def healthz_view(request: Request) -> Response:
     }
     """
     response_data = {
-        'status': 'healthy',
-        'timestamp': datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z'),
-        'version': __version__,
+        "status": "healthy",
+        "timestamp": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+        "version": __version__,
     }
 
     logger.info("healthz_check", status="healthy")
@@ -46,7 +47,7 @@ def healthz_view(request: Request) -> Response:
     return Response(response_data, status=200)
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 @permission_classes([AllowAny])
 def ready_view(request: Request) -> Response:
     """
@@ -76,31 +77,28 @@ def ready_view(request: Request) -> Response:
     """
     # Run all health checks
     checks = {
-        'database': database_health_check(),
-        'redis': redis_health_check(),
+        "database": database_health_check(),
+        "redis": redis_health_check(),
     }
 
     # Determine overall status
-    all_healthy = all(
-        check['status'] == 'healthy'
-        for check in checks.values()
-    )
+    all_healthy = all(check["status"] == "healthy" for check in checks.values())
 
-    overall_status = 'ready' if all_healthy else 'not_ready'
+    overall_status = "ready" if all_healthy else "not_ready"
     http_status = 200 if all_healthy else 503
 
     response_data = {
-        'status': overall_status,
-        'timestamp': datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z'),
-        'version': __version__,
-        'checks': checks,
+        "status": overall_status,
+        "timestamp": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+        "version": __version__,
+        "checks": checks,
     }
 
     logger.info(
         "ready_check",
         status=overall_status,
-        database_status=checks['database']['status'],
-        redis_status=checks['redis']['status'],
+        database_status=checks["database"]["status"],
+        redis_status=checks["redis"]["status"],
     )
 
     return Response(response_data, status=http_status)

@@ -3,6 +3,7 @@ Structured logging middleware for PulseWatch.
 
 Implements JSON structured logging with request correlation IDs using structlog.
 """
+
 import uuid
 from typing import Callable
 
@@ -50,7 +51,7 @@ class StructuredLoggingMiddleware:
         # Log request started
         logger.info(
             "request_started",
-            user_agent=request.META.get('HTTP_USER_AGENT', ''),
+            user_agent=request.META.get("HTTP_USER_AGENT", ""),
         )
 
         # Process request
@@ -63,7 +64,7 @@ class StructuredLoggingMiddleware:
         )
 
         # Add request ID to response headers for tracing
-        response['X-Request-ID'] = request_id
+        response["X-Request-ID"] = request_id
 
         return response
 
@@ -79,9 +80,9 @@ class StructuredLoggingMiddleware:
         Returns:
             str: Client IP address
         """
-        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        x_forwarded_for = request.META.get("HTTP_X_FORWARDED_FOR")
         if x_forwarded_for:
-            ip = x_forwarded_for.split(',')[0].strip()
+            ip = x_forwarded_for.split(",")[0].strip()
         else:
-            ip = request.META.get('REMOTE_ADDR', '')
+            ip = request.META.get("REMOTE_ADDR", "")
         return ip

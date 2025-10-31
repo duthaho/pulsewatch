@@ -3,6 +3,7 @@ Pytest configuration and fixtures for PulseWatch test suite.
 
 Provides common fixtures and test configuration for all test types.
 """
+
 from typing import Generator
 
 import pytest
@@ -26,9 +27,7 @@ def api_client() -> APIClient:
 def authenticated_client(api_client: APIClient, django_user_model) -> APIClient:
     """Provide an authenticated API client with a test user."""
     user = django_user_model.objects.create_user(
-        username='testuser',
-        email='test@example.com',
-        password='testpass123'
+        username="testuser", email="test@example.com", password="testpass123"
     )
     api_client.force_authenticate(user=user)
     return api_client
@@ -38,9 +37,7 @@ def authenticated_client(api_client: APIClient, django_user_model) -> APIClient:
 def test_user(django_user_model):
     """Create a test user."""
     return django_user_model.objects.create_user(
-        username='testuser',
-        email='test@example.com',
-        password='testpass123'
+        username="testuser", email="test@example.com", password="testpass123"
     )
 
 
@@ -48,20 +45,18 @@ def test_user(django_user_model):
 def superuser(django_user_model):
     """Create a superuser."""
     return django_user_model.objects.create_superuser(
-        username='admin',
-        email='admin@example.com',
-        password='adminpass123'
+        username="admin", email="admin@example.com", password="adminpass123"
     )
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 def celery_config():
     """Celery configuration for testing (eager mode)."""
     return {
-        'broker_url': 'memory://',
-        'result_backend': 'cache+memory://',
-        'task_always_eager': True,
-        'task_eager_propagates': True,
+        "broker_url": "memory://",
+        "result_backend": "cache+memory://",
+        "task_always_eager": True,
+        "task_eager_propagates": True,
     }
 
 
@@ -69,12 +64,14 @@ def celery_config():
 def _clear_cache(settings):
     """Clear cache before each test."""
     from django.core.cache import cache
+
     cache.clear()
 
 
 @pytest.fixture
 def mock_redis(monkeypatch):
     """Mock Redis connection for testing."""
+
     class MockRedis:
         def __init__(self):
             self.data = {}

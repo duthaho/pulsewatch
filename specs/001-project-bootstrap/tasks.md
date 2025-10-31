@@ -112,40 +112,40 @@
 
 ### Health Check Infrastructure
 
-- [ ] T046 [P] [US1] Create core/health/ package with __init__.py
-- [ ] T047 [P] [US1] Create core/health/checks.py with database_health_check() function
-- [ ] T048 [P] [US1] Create core/health/checks.py with redis_health_check() function
-- [ ] T049 [US1] Create core/health/views.py with healthz_view() implementing /healthz endpoint per contracts/health.yaml
-- [ ] T050 [US1] Create core/health/views.py with ready_view() implementing /ready endpoint per contracts/health.yaml
-- [ ] T051 [US1] Add health check URL routing in pulsewatch/urls.py
+- [x] T046 [P] [US1] Create core/health/ package with __init__.py
+- [x] T047 [P] [US1] Create core/health/checks.py with database_health_check() function
+- [x] T048 [P] [US1] Create core/health/checks.py with redis_health_check() function
+- [x] T049 [US1] Create core/health/views.py with healthz_view() implementing /healthz endpoint per contracts/health.yaml
+- [x] T050 [US1] Create core/health/views.py with ready_view() implementing /ready endpoint per contracts/health.yaml
+- [x] T051 [US1] Add health check URL routing in pulsewatch/urls.py
 
 ### Integration Tests for Health Endpoints
 
-- [ ] T052 [P] [US1] Create tests/integration/test_health.py with test_healthz_endpoint_returns_200()
-- [ ] T053 [P] [US1] Create tests/integration/test_health.py with test_ready_endpoint_with_healthy_dependencies()
-- [ ] T054 [P] [US1] Create tests/integration/test_health.py with test_ready_endpoint_with_unhealthy_database()
+- [x] T052 [P] [US1] Create tests/integration/test_health.py with test_healthz_endpoint_returns_200()
+- [x] T053 [P] [US1] Create tests/integration/test_health.py with test_ready_endpoint_with_healthy_dependencies()
+- [x] T054 [P] [US1] Create tests/integration/test_health.py with test_ready_endpoint_with_unhealthy_database()
 
 ### Contract Tests for Health API
 
-- [ ] T055 [P] [US1] Create tests/contract/test_health_api.py validating /healthz response schema matches contracts/health.yaml
-- [ ] T056 [P] [US1] Create tests/contract/test_health_api.py validating /ready response schema matches contracts/health.yaml
+- [x] T055 [P] [US1] Create tests/contract/test_health_api.py validating /healthz response schema matches contracts/health.yaml
+- [x] T056 [P] [US1] Create tests/contract/test_health_api.py validating /ready response schema matches contracts/health.yaml
 
 ### Database Setup
 
-- [ ] T057 [US1] Create initial Django migrations: python manage.py makemigrations
-- [ ] T058 [US1] Run initial Django migrations: python manage.py migrate
-- [ ] T059 [US1] Verify database connectivity with Django ORM query test
+- [x] T057 [US1] Create initial Django migrations: python manage.py makemigrations
+- [x] T058 [US1] Run initial Django migrations: python manage.py migrate
+- [x] T059 [US1] Verify database connectivity with Django ORM query test
 
 ### Pre-commit Hooks
 
-- [ ] T060 [P] [US1] Create .pre-commit-config.yaml with black, flake8, isort, mypy hooks
-- [ ] T061 [US1] Document pre-commit installation in README.md: pip install pre-commit && pre-commit install
+- [x] T060 [P] [US1] Create .pre-commit-config.yaml with black, flake8, isort, mypy hooks
+- [x] T061 [US1] Document pre-commit installation in README.md: pip install pre-commit && pre-commit install
 
 ### Development Documentation
 
-- [ ] T062 [US1] Copy quickstart.md content to README.md or create docs/quickstart.md with symbolic link
-- [ ] T063 [US1] Document optional HTTPS setup in README.md with self-signed certificate instructions for local development
-- [ ] T064 [US1] Verify all Makefile commands work: make up, make down, make test, make migrate
+- [x] T062 [US1] Copy quickstart.md content to README.md or create docs/quickstart.md with symbolic link
+- [x] T063 [US1] Document optional HTTPS setup in README.md with self-signed certificate instructions for local development
+- [x] T064 [US1] Verify all Makefile commands work: make up, make down, make test, make migrate
 
 **Checkpoint**: Local development environment is fully functional. Developers can clone, setup, and run the application successfully.
 
