@@ -97,6 +97,12 @@ metrics:  ## View Prometheus metrics
 pre-commit:  ## Run pre-commit hooks on all files
 	pre-commit run --all-files
 
+pre-commit-fast:  ## Run fast pre-commit checks (skip slow checks)
+	pre-commit run --files $$(git diff --cached --name-only)
+
+pre-commit-ci:  ## Run comprehensive pre-commit checks (for CI/CD)
+	pre-commit run --all-files --config .pre-commit-config-ci.yaml
+
 update-deps:  ## Update pre-commit hooks and Python dependencies
 	pre-commit autoupdate
 	pip list --outdated

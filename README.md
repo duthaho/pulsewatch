@@ -136,14 +136,22 @@ Pre-commit hooks run automatically on `git commit`:
 - **isort**: Import sorting
 - **flake8**: Linting
 - **mypy**: Type checking
+- **bandit**: Security checks
+- **detect-secrets**: Prevent committing secrets
+
+**Performance optimized**: Hooks only run on changed files for faster commits.
 
 Run manually:
 
 ```bash
-make lint              # Check all
-make format            # Auto-fix formatting
-pre-commit run --all-files  # Run all hooks
+make lint                    # Check all
+make format                  # Auto-fix formatting
+make pre-commit-fast         # Quick check on staged files
+make pre-commit              # Full check on all files
+make pre-commit-ci           # Comprehensive CI-level check
 ```
+
+**Tip**: If pre-commit is slow, see [docs/pre-commit-performance.md](docs/pre-commit-performance.md) for optimization tips.
 
 ## API Endpoints
 

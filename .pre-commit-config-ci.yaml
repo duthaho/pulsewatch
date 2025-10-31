@@ -1,5 +1,5 @@
-# Pre-commit hooks configuration
-# See https://pre-commit.com for more information
+# Pre-commit hooks configuration for CI/CD
+# Run comprehensive checks in CI: pre-commit run --all-files --config .pre-commit-config-ci.yaml
 
 repos:
   # General file checks
@@ -42,7 +42,7 @@ repos:
           - flake8-docstrings
           - flake8-bugbear
 
-  # Python type checking (runs only on changed Python files)
+  # Python type checking (full check in CI)
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.8.0
     hooks:
@@ -51,10 +51,8 @@ repos:
           - django-stubs
           - djangorestframework-stubs
           - types-redis
-        args: ['--config-file=mypy.ini', '--no-incremental']
+        args: ['--config-file=mypy.ini']
         exclude: ^(tests/|migrations/)
-        # Only run on Python files that changed
-        files: \.py$
 
   # Django-specific checks
   - repo: local
@@ -64,32 +62,27 @@ repos:
         entry: python manage.py check --deploy
         language: system
         pass_filenames: false
-        # Only run when Python files change
-        files: \.py$
-        stages: [manual]
+        always_run: true
 
       - id: django-check-migrations
         name: Check for missing migrations
         entry: python manage.py makemigrations --check --dry-run
         language: system
         pass_filenames: false
-        # Only run when models.py changes
-        files: 'models\.py$'
+        always_run: true
 
-  # Security checks (skip tests and migrations)
+  # Security checks (comprehensive in CI)
   - repo: https://github.com/PyCQA/bandit
     rev: 1.7.6
     hooks:
       - id: bandit
-        args: ['-c', 'pyproject.toml', '--skip', 'B101']
+        args: ['-c', 'pyproject.toml', '-r', '.']
         additional_dependencies: ['bandit[toml]']
-        exclude: ^(tests/|migrations/)
 
-  # Detect secrets (lightweight check for local commits)
+  # Detect secrets
   - repo: https://github.com/Yelp/detect-secrets
     rev: v1.4.0
     hooks:
       - id: detect-secrets
         args: ['--baseline', '.secrets.baseline']
         exclude: \.env\.example$
-        stages: [manual]  # Run manually or in CI to avoid slowdown
