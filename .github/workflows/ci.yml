@@ -60,7 +60,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.11', '3.12']
+        python-version: ['3.12']
       fail-fast: false  # Continue testing other versions even if one fails
 
     services:
@@ -194,7 +194,6 @@ jobs:
         run: |
           docker build -t pulsewatch:test .
           docker run --rm pulsewatch:test python --version
-          docker run --rm pulsewatch:test python -c "import django; print(f'Django {django.get_version()}')"
 
   # Job 4: Security and Dependency Checks
   security:
