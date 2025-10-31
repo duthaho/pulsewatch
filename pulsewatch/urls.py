@@ -14,7 +14,6 @@ urlpatterns = [
     # Prometheus metrics endpoint
     path('', include('django_prometheus.urls')),
     
-    # Health check endpoints (will be implemented in Phase 3)
-    path('healthz/', include('core.health.urls')),
-    path('ready/', include('core.health.urls')),
+    # Health check endpoints
+    path('', include('core.health.urls')),
 ]

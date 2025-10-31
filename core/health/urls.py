@@ -5,5 +5,9 @@ Provides /healthz (liveness) and /ready (readiness) endpoints.
 """
 from django.urls import path
 
-# Placeholder - will be implemented in Phase 3
-urlpatterns = []
+from core.health.views import healthz_view, ready_view
+
+urlpatterns = [
+    path('healthz/', healthz_view, name='healthz'),
+    path('ready/', ready_view, name='ready'),
+]
