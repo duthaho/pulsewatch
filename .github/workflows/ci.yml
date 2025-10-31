@@ -193,7 +193,10 @@ jobs:
       - name: Test Docker image
         run: |
           docker build -t pulsewatch:test .
-          docker run --rm pulsewatch:test python --version
+          # Test with overridden entrypoint to avoid running migrations
+          docker run --rm --entrypoint python pulsewatch:test --version
+          docker run --rm --entrypoint python pulsewatch:test -c "import django; print(f'Django {django.get_version()}')"
+          echo "✅ Docker image built successfully"
 
   # Job 4: Security and Dependency Checks
   security:
