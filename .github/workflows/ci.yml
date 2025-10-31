@@ -5,7 +5,7 @@ name: CI
 
 on:
   push:
-    branches: [ main, develop, 'feature/**', '001-project-bootstrap' ]
+    branches: [ main, develop, 'feature/**' ]
   pull_request:
     branches: [ main, develop ]
 
