@@ -123,3 +123,7 @@ exclude = [
     "dist",
 ]
 max-complexity = 10
+
+[tool.bandit]
+exclude_dirs = ["tests", "*/migrations/*"]
+skips = ["B101", "B601"]

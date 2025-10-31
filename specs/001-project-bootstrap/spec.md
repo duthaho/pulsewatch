@@ -1,8 +1,8 @@
 # Feature Specification: Project Bootstrap
 
-**Feature Branch**: `001-project-bootstrap`  
-**Created**: 2025-10-31  
-**Status**: Draft  
+**Feature Branch**: `001-project-bootstrap`
+**Created**: 2025-10-31
+**Status**: Draft
 **Input**: User description: "Project Bootstrap: Initialize the foundational project structure for a production-ready Django + MySQL SaaS platform following Clean Architecture and DDD"
 
 ## Clarifications

@@ -54,7 +54,7 @@ app_start_time.set(time.time())
 class MetricsMiddleware:
     """
     Middleware for custom application metrics.
-    
+
     Tracks active requests and provides hooks for custom metrics.
     Works alongside django-prometheus for comprehensive observability.
     """
@@ -66,16 +66,16 @@ class MetricsMiddleware:
     def __call__(self, request: HttpRequest) -> HttpResponse:
         """
         Process request and update metrics.
-        
+
         Args:
             request: The Django HTTP request object
-            
+
         Returns:
             HttpResponse: The response from downstream middleware/view
         """
         # Track active requests
         active_requests.inc()
-        
+
         try:
             response = self.get_response(request)
             return response

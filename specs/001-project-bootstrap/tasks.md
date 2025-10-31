@@ -1,6 +1,6 @@
 # Tasks: Project Bootstrap
 
-**Input**: Design documents from `/specs/001-project-bootstrap/`  
+**Input**: Design documents from `/specs/001-project-bootstrap/`
 **Prerequisites**: plan.md ✅, spec.md ✅, research.md ✅, data-model.md ✅, contracts/ ✅
 
 **Tests**: This feature specification does NOT explicitly request TDD or test generation. Tasks focus on infrastructure setup and verification. Integration tests for health endpoints are included as they validate the feature's success criteria.
@@ -317,7 +317,7 @@ Foundational (Phase 2)
 
 **Phase 1 (Setup)**: All tasks T001-T010 marked [P] can run in parallel (different files)
 
-**Phase 2 (Foundational)**: 
+**Phase 2 (Foundational)**:
 - Dependencies (T011-T016): All parallel
 - Django config (T017-T026): T019, T021-T026 parallel after T017-T018
 - Infrastructure (T027-T043): T027+T028, T030-T032, T036-T038, T042-T043 can run in parallel groups
@@ -394,7 +394,7 @@ Task T059: Create .pre-commit-config.yaml
 1. **Complete Phase 1**: Setup (T001-T010) → ~2 hours
 2. **Complete Phase 2**: Foundational (T011-T045) → ~1 day (CRITICAL - blocks all stories)
 3. **Complete Phase 3**: User Story 1 (T046-T062) → ~4 hours
-4. **STOP and VALIDATE**: 
+4. **STOP and VALIDATE**:
    - Run quickstart.md steps 1-9
    - Test health endpoints: curl http://localhost:8000/healthz
    - Run test suite: pytest

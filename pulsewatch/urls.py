@@ -10,10 +10,10 @@ from django.urls import include, path
 urlpatterns = [
     # Admin site
     path('admin/', admin.site.urls),
-    
+
     # Prometheus metrics endpoint
     path('', include('django_prometheus.urls')),
-    
+
     # Health check endpoints
     path('', include('core.health.urls')),
 ]

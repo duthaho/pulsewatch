@@ -9,10 +9,10 @@ from django.db import models
 class TimestampedModel(models.Model):
     """
     Abstract base class that adds timestamp fields to models.
-    
+
     Automatically tracks creation and modification times.
     """
-    
+
     created_at = models.DateTimeField(
         auto_now_add=True,
         help_text="Timestamp when the record was created"
@@ -30,10 +30,10 @@ class TimestampedModel(models.Model):
 class SoftDeleteModel(models.Model):
     """
     Abstract base class that adds soft delete functionality.
-    
+
     Records are marked as deleted instead of being removed from the database.
     """
-    
+
     is_deleted = models.BooleanField(
         default=False,
         db_index=True,
@@ -65,9 +65,9 @@ class SoftDeleteModel(models.Model):
 class TimestampedSoftDeleteModel(TimestampedModel, SoftDeleteModel):
     """
     Abstract base class combining timestamped and soft delete functionality.
-    
+
     Provides both automatic timestamps and soft delete capabilities.
     """
-    
+
     class Meta:
         abstract = True

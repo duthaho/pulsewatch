@@ -129,13 +129,13 @@ def apply_discount(request: Request, order_id: str) -> Response:
     """Apply discount to an order using DRF view"""
     discount_request = ApplyDiscountRequest(**request.data)
     use_case = get_use_case()  # Injected via Django dependency
-    
+
     order = use_case.execute(
         OrderId(discount_request.order_id),
         discount_request.discount_percentage
     )
     return Response({
-        "order_id": order.id.value, 
+        "order_id": order.id.value,
         "total": order.total_amount
     })
 ```

@@ -169,13 +169,13 @@ Your primary directive is to ensure all Python code you generate, review, or ref
   SECURE_SSL_REDIRECT = True
   SESSION_COOKIE_SECURE = True
   CSRF_COOKIE_SECURE = True
-  
+
   # Custom middleware for additional headers
   # middleware.py
   class SecurityHeadersMiddleware:
       def __init__(self, get_response):
           self.get_response = get_response
-  
+
       def __call__(self, request):
           response = self.get_response(request)
           response["X-Content-Type-Options"] = "nosniff"
@@ -200,7 +200,7 @@ Your primary directive is to ensure all Python code you generate, review, or ref
   SESSION_COOKIE_HTTPONLY = True  # Prevent JavaScript access
   SESSION_COOKIE_SAMESITE = 'Strict'  # CSRF protection
   SESSION_COOKIE_AGE = 3600  # Session timeout in seconds
-  
+
   # CSRF protection (enabled by default in Django)
   CSRF_COOKIE_SECURE = True
   CSRF_COOKIE_HTTPONLY = True
@@ -213,7 +213,7 @@ Your primary directive is to ensure all Python code you generate, review, or ref
   # GOOD: Rate limiting with django-ratelimit
   from django_ratelimit.decorators import ratelimit
   from django.views.decorators.http import require_http_methods
-  
+
   @ratelimit(key='ip', rate='5/m', method='POST')
   @require_http_methods(["POST"])
   def login_view(request):

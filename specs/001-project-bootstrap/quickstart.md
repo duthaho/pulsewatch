@@ -1,7 +1,7 @@
 # 🚀 PulseWatch Quick Start Guide
 
-**Last Updated**: 2025-10-31  
-**Target Audience**: New developers setting up local development environment  
+**Last Updated**: 2025-10-31
+**Target Audience**: New developers setting up local development environment
 **Time to Complete**: 15-20 minutes
 
 ---

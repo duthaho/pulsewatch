@@ -24,10 +24,10 @@ logger = structlog.get_logger(__name__)
 def healthz_view(request: Request) -> Response:
     """
     Liveness probe endpoint.
-    
+
     Returns 200 OK if the application process is running.
     Does not check dependencies - only verifies the service is alive.
-    
+
     Response schema (per contracts/health.yaml):
     {
         "status": "healthy",
@@ -40,9 +40,9 @@ def healthz_view(request: Request) -> Response:
         'timestamp': datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z'),
         'version': __version__,
     }
-    
+
     logger.info("healthz_check", status="healthy")
-    
+
     return Response(response_data, status=200)
 
 
@@ -51,10 +51,10 @@ def healthz_view(request: Request) -> Response:
 def ready_view(request: Request) -> Response:
     """
     Readiness probe endpoint.
-    
+
     Returns 200 OK if the application is ready to serve traffic.
     Checks all critical dependencies (database, Redis).
-    
+
     Response schema (per contracts/health.yaml):
     {
         "status": "ready" | "not_ready",
@@ -79,28 +79,28 @@ def ready_view(request: Request) -> Response:
         'database': database_health_check(),
         'redis': redis_health_check(),
     }
-    
+
     # Determine overall status
     all_healthy = all(
-        check['status'] == 'healthy' 
+        check['status'] == 'healthy'
         for check in checks.values()
     )
-    
+
     overall_status = 'ready' if all_healthy else 'not_ready'
     http_status = 200 if all_healthy else 503
-    
+
     response_data = {
         'status': overall_status,
         'timestamp': datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z'),
         'version': __version__,
         'checks': checks,
     }
-    
+
     logger.info(
         "ready_check",
         status=overall_status,
         database_status=checks['database']['status'],
         redis_status=checks['redis']['status'],
     )
-    
+
     return Response(response_data, status=http_status)

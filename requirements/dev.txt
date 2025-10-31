@@ -19,6 +19,11 @@ djangorestframework-stubs>=3.14.4
 # Pre-commit hooks
 pre-commit>=3.5.0
 
+# Security scanning
+bandit>=1.7.6
+detect-secrets>=1.4.0
+
 # Development tools
 ipython>=8.16.0
 ipdb>=0.13.13
+django-extensions>=3.2.3

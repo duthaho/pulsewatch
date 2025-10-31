@@ -138,7 +138,7 @@ from infrastructure.repositories.order_repository import DjangoOrderRepository
 def create_order(request: Request) -> Response:
     """
     Create a new order for a customer.
-    
+
     Request body:
     - customer_id: UUID of the customer
     - items: List of order items
@@ -149,17 +149,17 @@ def create_order(request: Request) -> Response:
             serializer.errors,
             status=status.HTTP_400_BAD_REQUEST
         )
-    
+
     try:
         # Inject dependencies
         repository = DjangoOrderRepository()
         use_case = CreateOrderUseCase(repository)
-        
+
         order = use_case.execute(
             customer_id=UUID(serializer.validated_data['customer_id']),
             items=serializer.validated_data['items']
         )
-        
+
         response_serializer = OrderSerializer.from_domain(order)
         return Response(
             response_serializer.data,
@@ -178,14 +178,14 @@ def get_order(request: Request, order_id: str) -> Response:
     try:
         repository = DjangoOrderRepository()
         use_case = CreateOrderUseCase(repository)
-        
+
         order = use_case.get_by_id(UUID(order_id))
         if not order:
             return Response(
                 {'error': f'Order {order_id} not found'},
                 status=status.HTTP_404_NOT_FOUND
             )
-        
+
         serializer = OrderSerializer.from_domain(order)
         return Response(serializer.data)
     except ValueError as e:
@@ -267,11 +267,11 @@ urlpatterns = [
     # Order endpoints
     path('orders/', orders.create_order, name='create_order'),
     path('orders/<str:order_id>/', orders.get_order, name='get_order'),
-    
+
     # Customer endpoints
     path('customers/', customers.list_customers, name='list_customers'),
     path('customers/<str:customer_id>/', customers.get_customer, name='get_customer'),
-    
+
     # Health check
     path('health/', orders.health_check, name='health_check'),
 ]
@@ -303,7 +303,7 @@ class OrderAPITestCase(TestCase):
             password='testpass'
         )
         self.client.force_authenticate(user=self.user)
-    
+
     def test_create_order(self):
         """Test creating a new order."""
         response = self.client.post(
@@ -316,11 +316,11 @@ class OrderAPITestCase(TestCase):
             },
             format='json'
         )
-        
+
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertIn('id', response.data)
         self.assertEqual(response.data['status'], 'PENDING')
-    
+
     def test_get_order(self):
         """Test retrieving an order by ID."""
         # First create an order
@@ -330,7 +330,7 @@ class OrderAPITestCase(TestCase):
             format='json'
         )
         order_id = create_response.data['id']
-        
+
         # Then retrieve it
         response = self.client.get(f'/api/v1/orders/{order_id}/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)

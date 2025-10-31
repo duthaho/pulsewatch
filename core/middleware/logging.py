@@ -15,7 +15,7 @@ logger = structlog.get_logger(__name__)
 class StructuredLoggingMiddleware:
     """
     Middleware that adds structured logging with request correlation.
-    
+
     Generates a unique request_id for each request and binds it to the logger
     context for the duration of the request processing.
     """
@@ -27,10 +27,10 @@ class StructuredLoggingMiddleware:
     def __call__(self, request: HttpRequest) -> HttpResponse:
         """
         Process request and add structured logging context.
-        
+
         Args:
             request: The Django HTTP request object
-            
+
         Returns:
             HttpResponse: The response from downstream middleware/view
         """
@@ -70,12 +70,12 @@ class StructuredLoggingMiddleware:
     def _get_client_ip(self, request: HttpRequest) -> str:
         """
         Extract client IP address from request.
-        
+
         Handles X-Forwarded-For header for proxied requests.
-        
+
         Args:
             request: The Django HTTP request object
-            
+
         Returns:
             str: Client IP address
         """
