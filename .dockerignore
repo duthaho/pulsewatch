@@ -1,0 +1,73 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual Environment
+.venv/
+venv/
+ENV/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+*.cover
+
+# Database
+*.sqlite3
+db.sqlite3
+*.db
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.local
+
+# Git
+.git/
+.gitignore
+
+# Docker
+docker-compose.override.yml
+Dockerfile
+.dockerignore
+
+# Documentation
+docs/
+*.md
+!README.md
+
+# CI/CD
+.github/
+.specify/
+
+# Specs and Planning
+specs/
+
+# Cache
+.mypy_cache/
+.ruff_cache/
+.pre-commit-config.yaml
+
+# Static files (will be collected in container)
+staticfiles/
+mediafiles/

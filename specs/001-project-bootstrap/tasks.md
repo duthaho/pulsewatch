@@ -159,22 +159,25 @@
 
 ### Docker Configuration
 
-- [ ] T065 [P] [US2] Create docker/Dockerfile with multi-stage build for Django application
-- [ ] T066 [P] [US2] Create docker-compose.yml with web, db, redis services per research.md
-- [ ] T067 [US2] Configure web service with volume mounts for code hot-reload: ./pulsewatch:/app
-- [ ] T068 [US2] Configure db service with MySQL 8.x image and persistent volume: mysql_data:/var/lib/mysql
-- [ ] T069 [US2] Configure redis service with Redis 7.x image (ephemeral data)
-- [ ] T070 [P] [US2] Add healthcheck for MySQL service: mysqladmin ping
-- [ ] T071 [P] [US2] Add depends_on configuration: web depends on db (service_healthy) and redis (service_started)
-- [ ] T072 [US2] Configure custom bridge network: pulsewatch_network
+- [x] T065 [P] [US2] Create docker/Dockerfile with multi-stage build for Django application
+- [x] T066 [P] [US2] Create docker-compose.yml with web, db, redis services per research.md
+- [x] T067 [US2] Configure web service with volume mounts for code hot-reload: ./pulsewatch:/app
+- [x] T068 [US2] Configure db service with MySQL 8.x image and persistent volume: mysql_data:/var/lib/mysql
+- [x] T069 [US2] Configure redis service with Redis 7.x image (ephemeral data)
+- [x] T070 [P] [US2] Add healthcheck for MySQL service: mysqladmin ping
+- [x] T071 [P] [US2] Add depends_on configuration: web depends on db (service_healthy) and redis (service_started)
+- [x] T072 [US2] Configure custom bridge network: pulsewatch_network
 
 ### Environment Integration
 
-- [ ] T073 [US2] Create docker-compose.override.yml for local development overrides (optional)
-- [ ] T074 [US2] Update .env.example with Docker-specific environment variables (MYSQL_HOST=db)
-- [ ] T075 [US2] Document Docker commands in Makefile: make docker-up, make docker-down, make docker-logs
+- [x] T073 [US2] Create docker-compose.override.yml for local development overrides (optional)
+- [x] T074 [US2] Update .env.example with Docker-specific environment variables (MYSQL_HOST=db)
+- [x] T075 [US2] Document Docker commands in Makefile: make docker-up, make docker-down, make docker-logs
 
 ### Docker Testing
+
+**Testing Guide**: See `docker/TESTING.md` for detailed step-by-step manual testing instructions.
+**Automated Testing**: Run `./docker/test-docker-setup.sh` for automated validation.
 
 - [ ] T076 [US2] Test docker compose up starts all services successfully
 - [ ] T077 [US2] Test docker compose exec web python manage.py migrate runs migrations
@@ -183,8 +186,8 @@
 
 ### Docker Documentation
 
-- [ ] T080 [US2] Add Docker setup section to README.md with prerequisites (Docker, Docker Compose)
-- [ ] T081 [US2] Document troubleshooting for common Docker issues (port conflicts, permission errors)
+- [x] T080 [US2] Add Docker setup section to README.md with prerequisites (Docker, Docker Compose)
+- [x] T081 [US2] Document troubleshooting for common Docker issues (port conflicts, permission errors)
 
 **Checkpoint**: Containerized environment is production-parity. All services run in Docker with persistent data and graceful shutdown.
 

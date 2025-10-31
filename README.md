@@ -211,6 +211,54 @@ docker-compose logs db
 sudo chown -R $USER:$USER .
 ```
 
+### Container fails to start
+```bash
+# Check container logs
+docker-compose logs web
+
+# Check if all containers are running
+docker-compose ps
+
+# Restart specific service
+docker-compose restart web
+
+# Rebuild containers if code changes aren't reflected
+docker-compose build --no-cache
+docker-compose up -d
+```
+
+### Database initialization fails
+```bash
+# Remove volumes and start fresh
+docker-compose down -v
+docker-compose up -d
+
+# Check database logs
+docker-compose logs db
+
+# Manually run migrations
+docker-compose exec web python manage.py migrate
+```
+
+### Volume mount issues (Windows)
+```bash
+# Ensure Docker Desktop has access to the drive
+# Settings → Resources → File Sharing → Add drive
+
+# Use WSL 2 backend for better performance
+# Settings → General → Use WSL 2 based engine
+```
+
+### Out of disk space
+```bash
+# Clean up unused Docker resources
+docker system prune -a --volumes
+
+# Remove specific volumes
+docker volume ls
+docker volume rm pulsewatch_mysql_data
+```
+
 ## Optional: HTTPS for Local Development
 
 For testing HTTPS locally (e.g., testing secure cookies, SSL redirects), you can generate self-signed certificates:
