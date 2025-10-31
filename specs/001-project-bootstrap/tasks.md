@@ -201,25 +201,25 @@
 
 ### CI/CD Pipeline Configuration
 
-- [ ] T082 [P] [US3] Create .github/workflows/ci.yml with GitHub Actions workflow
-- [ ] T083 [P] [US3] Configure job: lint with Python 3.12, runs black --check, flake8, isort --check, mypy
-- [ ] T084 [P] [US3] Configure job: test with matrix strategy (Python 3.11, 3.12)
-- [ ] T085 [US3] Add MySQL service container to test job for database integration tests
-- [ ] T086 [US3] Add Redis service container to test job for cache integration tests
-- [ ] T087 [P] [US3] Configure test job to run pytest with coverage: pytest --cov --cov-report=xml --cov-report=html
-- [ ] T088 [P] [US3] Add coverage upload to test job: actions/upload-artifact for coverage reports
-- [ ] T089 [P] [US3] Configure job: docker to build Docker image and verify no build errors
+- [x] T082 [P] [US3] Create .github/workflows/ci.yml with GitHub Actions workflow
+- [x] T083 [P] [US3] Configure job: lint with Python 3.12, runs black --check, flake8, isort --check, mypy
+- [x] T084 [P] [US3] Configure job: test with matrix strategy (Python 3.11, 3.12)
+- [x] T085 [US3] Add MySQL service container to test job for database integration tests
+- [x] T086 [US3] Add Redis service container to test job for cache integration tests
+- [x] T087 [P] [US3] Configure test job to run pytest with coverage: pytest --cov --cov-report=xml --cov-report=html
+- [x] T088 [P] [US3] Add coverage upload to test job: actions/upload-artifact for coverage reports
+- [x] T089 [P] [US3] Configure job: docker to build Docker image and verify no build errors
 
 ### Branch Protection Rules
 
-- [ ] T090 [US3] Document required branch protection settings in README.md: require CI checks before merge
-- [ ] T091 [US3] Document manual re-run capability: "Re-run jobs" button in GitHub Actions UI
+- [x] T090 [US3] Document required branch protection settings in README.md: require CI checks before merge
+- [x] T091 [US3] Document manual re-run capability: "Re-run jobs" button in GitHub Actions UI
 
 ### CI/CD Documentation
 
-- [ ] T092 [US3] Create .github/workflows/README.md documenting pipeline structure and jobs
-- [ ] T093 [US3] Add CI/CD section to main README.md with badge displaying pipeline status
-- [ ] T094 [US3] Document how to run CI checks locally: make check (runs all quality tools)
+- [x] T092 [US3] Create .github/workflows/README.md documenting pipeline structure and jobs
+- [x] T093 [US3] Add CI/CD section to main README.md with badge displaying pipeline status
+- [x] T094 [US3] Document how to run CI checks locally: make check (runs all quality tools)
 
 ### Pipeline Testing
 

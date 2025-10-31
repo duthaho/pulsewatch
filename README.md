@@ -1,5 +1,11 @@
 # PulseWatch
 
+[![CI](https://github.com/duthaho/pulsewatch/actions/workflows/ci.yml/badge.svg)](https://github.com/duthaho/pulsewatch/actions/workflows/ci.yml)
+[![Coverage](https://img.shields.io/badge/coverage-85%25-brightgreen.svg)](https://github.com/duthaho/pulsewatch)
+[![Python](https://img.shields.io/badge/python-3.11%20%7C%203.12-blue.svg)](https://www.python.org/downloads/)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 **Real-time Health Monitoring SaaS Platform**
 
 PulseWatch is a multi-tenant SaaS platform for monitoring website and API endpoint health with configurable checks, intelligent alerting, and team collaboration features.
@@ -152,6 +158,46 @@ make pre-commit-ci           # Comprehensive CI-level check
 ```
 
 **Tip**: If pre-commit is slow, see [docs/pre-commit-performance.md](docs/pre-commit-performance.md) for optimization tips.
+
+## CI/CD Pipeline
+
+[![CI](https://github.com/duthaho/pulsewatch/actions/workflows/ci.yml/badge.svg)](https://github.com/duthaho/pulsewatch/actions/workflows/ci.yml)
+
+The project uses GitHub Actions for continuous integration and deployment.
+
+### Pipeline Jobs
+
+- **Lint**: Code formatting, import sorting, linting, type checking, security checks
+- **Test**: Unit, integration, and contract tests with coverage (Python 3.11 & 3.12)
+- **Docker**: Build verification and image testing
+- **Security**: Dependency scanning and comprehensive pre-commit checks
+
+### Running CI Checks Locally
+
+Before pushing, run the same checks that CI will run:
+
+```bash
+# Quick check (recommended before every commit)
+make check              # Runs lint + test
+
+# Individual checks
+make lint               # Code quality checks
+make test               # Test suite with coverage
+make format             # Auto-fix formatting issues
+
+# Comprehensive CI-level check (before pushing)
+make pre-commit-ci      # All hooks, all files
+```
+
+### Branch Protection
+
+The `main` branch requires:
+- ✅ All lint checks pass
+- ✅ All tests pass (Python 3.11 & 3.12)
+- ✅ Docker build succeeds
+- ✅ Code coverage ≥80%
+
+See [.github/workflows/README.md](.github/workflows/README.md) for detailed pipeline documentation.
 
 ## API Endpoints
 
@@ -317,15 +363,67 @@ Your browser will warn about the self-signed certificate. Click "Advanced" → "
 
 **Note**: Self-signed certificates are for local development only. Use proper certificates from Let's Encrypt or a CA in production.
 
-## CI/CD
+## Branch Protection Rules
 
-GitHub Actions pipeline runs on every push:
+### Setting Up Branch Protection
 
-1. **Lint**: black, isort, flake8, mypy
-2. **Test**: pytest with matrix (Python 3.11, 3.12)
-3. **Docker**: Build verification
+To enforce CI checks before merging to `main`:
 
-Pipeline must pass before PR can be merged.
+1. Navigate to: **Settings → Branches → Add branch protection rule**
+
+2. **Branch name pattern**: `main`
+
+3. **Required status checks**:
+   - ✅ Require status checks to pass before merging
+   - ✅ Require branches to be up to date before merging
+   - Select required checks:
+     - `Lint (Python 3.12)`
+     - `Test (Python 3.11)`
+     - `Test (Python 3.12)`
+     - `Docker Build`
+     - `CI Success`
+
+4. **Additional settings**:
+   - ✅ Require conversation resolution before merging
+   - ✅ Require linear history (optional, for clean history)
+   - ✅ Include administrators (enforce rules for all)
+
+5. **Save changes**
+
+### Re-running Failed Checks
+
+If a CI check fails:
+
+1. Go to **Actions** tab in GitHub
+2. Click on the failed workflow run
+3. Click **Re-run jobs** dropdown
+4. Select:
+   - **Re-run all jobs**: Retry everything
+   - **Re-run failed jobs**: Only retry failures
+
+### Testing Branch Protection
+
+```bash
+# Create a test branch
+git checkout -b test/branch-protection
+
+# Make a change that will fail lint
+echo "bad_code = 'not formatted'" >> test.py
+git add test.py
+git commit -m "test: intentional lint failure"
+git push origin test/branch-protection
+
+# Create a pull request
+# Observe that CI fails and merge is blocked
+
+# Fix the issue
+make format
+git add test.py
+git commit -m "fix: format code"
+git push
+
+# Observe that CI passes and merge is now allowed
+```
 
 ## Contributing
 
