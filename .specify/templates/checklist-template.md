@@ -20,17 +20,66 @@
   ============================================================================
 -->
 
-## [Category 1]
+## Architecture Compliance (PulseWatch Constitution)
 
-- [ ] CHK001 First checklist item with clear action
-- [ ] CHK002 Second checklist item
-- [ ] CHK003 Third checklist item
+- [ ] CHK001 Clean Architecture: Domain layer has no Django imports (pure Python entities/value objects)
+- [ ] CHK002 Clean Architecture: Application layer depends only on domain protocols/abstractions
+- [ ] CHK003 Clean Architecture: Infrastructure implements application protocols (repository pattern)
+- [ ] CHK004 Clean Architecture: Interface layer (views/serializers) depends on use cases, not models directly
+- [ ] CHK005 DDD: Feature belongs to correct bounded context (users/monitoring/notifications/team/billing)
+- [ ] CHK006 DDD: Domain events used for cross-context communication (decoupled)
+- [ ] CHK007 DDD: Ubiquitous language used consistently in code and documentation
 
-## [Category 2]
+## Code Quality
 
-- [ ] CHK004 Another category item
-- [ ] CHK005 Item with specific criteria
-- [ ] CHK006 Final item in this category
+- [ ] CHK008 Type hints on all public functions and class attributes (mypy strict mode passes)
+- [ ] CHK009 PEP 8 compliance (black formatter applied, flake8 passes)
+- [ ] CHK010 Google-style docstrings on all public APIs
+- [ ] CHK011 SOLID: Single responsibility principle followed (one reason to change per class)
+- [ ] CHK012 SOLID: Dependency injection via protocols (no hard-coded implementations)
+- [ ] CHK013 No fat Django models (business logic in domain/application layers)
+
+## Testing
+
+- [ ] CHK014 TDD: Tests written and approved before implementation
+- [ ] CHK015 Unit tests for domain entities (no mocks, pure logic tests in tests/unit/)
+- [ ] CHK016 Integration tests for use cases (test database in tests/integration/)
+- [ ] CHK017 Contract tests for API endpoints (DRF TestClient in tests/contract/)
+- [ ] CHK018 Code coverage ≥ 85% (pytest-cov report passes)
+- [ ] CHK019 All tests pass in CI (GitHub Actions green)
+
+## Security
+
+- [ ] CHK020 Input validation via DRF serializers (reject malformed requests)
+- [ ] CHK021 Authentication enforced (JWT via djangorestframework-simplejwt)
+- [ ] CHK022 Authorization checks at use case layer (RBAC: Owner/Member/Viewer)
+- [ ] CHK023 No raw SQL with user input (Django ORM only, parameterized queries)
+- [ ] CHK024 Secrets in environment variables (no hardcoded keys/passwords)
+- [ ] CHK025 HTTPS enforced in production settings (SECURE_SSL_REDIRECT=True)
+- [ ] CHK026 Rate limiting on authentication endpoints (django-ratelimit configured)
+
+## Observability
+
+- [ ] CHK027 Structured logging with context (user_id, request_id via structlog)
+- [ ] CHK028 Prometheus metrics for endpoint (rate, errors, duration tracked)
+- [ ] CHK029 OpenTelemetry tracing for distributed calls (Django → Celery → external APIs)
+- [ ] CHK030 Error tracking configured (Sentry captures exceptions with context)
+
+## 12-Factor Compliance
+
+- [ ] CHK031 Config via environment variables (django-environ used, no hardcoded settings)
+- [ ] CHK032 Stateless processes (no in-memory state, use MySQL/Redis for persistence)
+- [ ] CHK033 Backing services as URLs (DATABASE_URL, REDIS_URL in .env)
+- [ ] CHK034 Health/readiness endpoints implemented (/health, /ready for K8s probes)
+- [ ] CHK035 Logs to stdout/stderr (no file logging, aggregated by container runtime)
+
+## Database
+
+- [ ] CHK036 Django migrations created and tested (./manage.py makemigrations)
+- [ ] CHK037 Migrations are reversible (down migration tested)
+- [ ] CHK038 No N+1 queries (django-debug-toolbar or django-silk verified)
+- [ ] CHK039 Database indexes on foreign keys and frequently queried fields
+- [ ] CHK040 Transactions used for multi-step operations (atomic blocks)
 
 ## Notes
 

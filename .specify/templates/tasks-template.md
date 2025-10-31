@@ -20,10 +20,18 @@ description: "Task list template for feature implementation"
 
 ## Path Conventions
 
-- **Single project**: `src/`, `tests/` at repository root
-- **Web app**: `backend/src/`, `frontend/src/`
-- **Mobile**: `api/src/`, `ios/src/` or `android/src/`
-- Paths shown below assume single project - adjust based on plan.md structure
+**PulseWatch uses Django bounded context structure** (see constitution and plan-template.md):
+
+- Bounded contexts: `apps/[context]/` (e.g., `apps/users/`, `apps/monitoring/`, `apps/notifications/`)
+- Within each bounded context:
+  - Domain: `apps/[context]/domain/entities/`, `apps/[context]/domain/value_objects/`
+  - Application: `apps/[context]/application/use_cases/`, `apps/[context]/application/repositories.py`
+  - Infrastructure: `apps/[context]/infrastructure/models.py`, `apps/[context]/infrastructure/repositories/`
+  - Interface: `apps/[context]/interface/views.py`, `apps/[context]/interface/serializers.py`
+- Tests: `tests/unit/`, `tests/integration/`, `tests/contract/`, `tests/e2e/`
+- Shared code: `core/settings/`, `core/middleware/`, `core/utils/`
+
+**Use full paths in task descriptions** (e.g., `apps/monitoring/domain/entities/check.py`)
 
 <!-- 
   ============================================================================
@@ -60,14 +68,17 @@ description: "Task list template for feature implementation"
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-Examples of foundational tasks (adjust based on your project):
+Examples of foundational tasks for PulseWatch (adjust based on specific feature):
 
-- [ ] T004 Setup database schema and migrations framework
-- [ ] T005 [P] Implement authentication/authorization framework
-- [ ] T006 [P] Setup API routing and middleware structure
-- [ ] T007 Create base models/entities that all stories depend on
-- [ ] T008 Configure error handling and logging infrastructure
-- [ ] T009 Setup environment configuration management
+- [ ] T004 Setup Django project structure with bounded context apps in apps/ directory
+- [ ] T005 Configure MySQL database connection and Django settings modularization (core/settings/)
+- [ ] T006 [P] Implement base repository protocols in shared location (core/repositories.py)
+- [ ] T007 [P] Setup JWT authentication with djangorestframework-simplejwt
+- [ ] T008 [P] Configure structured logging with structlog (core/middleware/logging.py)
+- [ ] T009 [P] Setup Prometheus metrics middleware (core/middleware/metrics.py)
+- [ ] T010 Create base domain event infrastructure (core/events/)
+- [ ] T011 [P] Configure Celery for background tasks (core/celery.py)
+- [ ] T012 Setup DRF error handling and validation (core/exceptions.py)
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -88,12 +99,16 @@ Examples of foundational tasks (adjust based on your project):
 
 ### Implementation for User Story 1
 
-- [ ] T012 [P] [US1] Create [Entity1] model in src/models/[entity1].py
-- [ ] T013 [P] [US1] Create [Entity2] model in src/models/[entity2].py
-- [ ] T014 [US1] Implement [Service] in src/services/[service].py (depends on T012, T013)
-- [ ] T015 [US1] Implement [endpoint/feature] in src/[location]/[file].py
-- [ ] T016 [US1] Add validation and error handling
-- [ ] T017 [US1] Add logging for user story 1 operations
+- [ ] T012 [P] [US1] Create [Entity1] domain entity in apps/[context]/domain/entities/[entity1].py
+- [ ] T013 [P] [US1] Create [ValueObject] in apps/[context]/domain/value_objects/[vo].py
+- [ ] T014 [P] [US1] Define repository protocol in apps/[context]/application/repositories.py
+- [ ] T015 [US1] Implement use case in apps/[context]/application/use_cases/[use_case].py (depends on T012, T013, T014)
+- [ ] T016 [US1] Create Django ORM model in apps/[context]/infrastructure/models.py
+- [ ] T017 [US1] Implement repository in apps/[context]/infrastructure/repositories/[repo].py
+- [ ] T018 [US1] Create DRF serializer in apps/[context]/interface/serializers.py
+- [ ] T019 [US1] Implement API view in apps/[context]/interface/views.py
+- [ ] T020 [US1] Add URL routing in apps/[context]/interface/urls.py
+- [ ] T021 [US1] Add structured logging with context (user_id, request_id)
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 

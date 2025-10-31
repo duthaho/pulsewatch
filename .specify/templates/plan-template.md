@@ -17,21 +17,27 @@
   the iteration process.
 -->
 
-**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
-**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
-**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
-**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
-**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
-**Project Type**: [single/web/mobile - determines source structure]  
-**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
-**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
-**Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
+**Language/Version**: Python 3.12  
+**Primary Dependencies**: Django 5.x, Django REST Framework 3.x, Celery 5.x, MySQL 8.x, Redis 7.x  
+**Storage**: MySQL 8.x (InnoDB) with read replicas, Redis for caching/sessions  
+**Testing**: pytest, pytest-django, pytest-cov (≥85% coverage), factory_boy for fixtures  
+**Target Platform**: Linux server (Docker containers on Kubernetes - AWS EKS or GKE)  
+**Project Type**: Web application (Django backend + REST API, optional Next.js frontend)  
+**Performance Goals**: <500ms p95 API latency, 1000+ concurrent users, 10k checks monitored  
+**Constraints**: Stateless app processes, <200ms database queries, horizontal scaling required  
+**Scale/Scope**: Multi-tenant SaaS, 10k+ users, 5 bounded contexts (users/monitoring/notifications/team/billing)
 
 ## Constitution Check
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+- [ ] **Clean Architecture**: Feature organized into domain/application/infrastructure/interface layers
+- [ ] **Bounded Context**: Feature belongs to clear bounded context (users/monitoring/notifications/team/billing)
+- [ ] **Test-First**: Test cases written and approved before implementation (TDD red-green-refactor)
+- [ ] **SOLID Principles**: Single responsibility, dependency injection via protocols, type hints enforced
+- [ ] **12-Factor Compliance**: Config via env vars, stateless processes, backing services as URLs
+- [ ] **Observability**: Structured logging, Prometheus metrics, OpenTelemetry tracing included
+- [ ] **Security**: Input validation (DRF serializers), authentication (JWT), authorization (RBAC) enforced
 
 ## Project Structure
 
@@ -56,39 +62,35 @@ specs/[###-feature]/
 -->
 
 ```text
-# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
-src/
-├── models/
-├── services/
-├── cli/
-└── lib/
+# PulseWatch Django Structure (Bounded Context per Django App)
+apps/
+├── [bounded_context_name]/          # e.g., users, monitoring, notifications, team, billing
+│   ├── domain/                       # Pure Python: entities, value objects, domain events
+│   │   ├── entities/
+│   │   ├── value_objects/
+│   │   └── events.py
+│   ├── application/                  # Use cases, services, repository protocols
+│   │   ├── use_cases/
+│   │   └── repositories.py
+│   ├── infrastructure/               # Django ORM models, repository implementations
+│   │   ├── models.py
+│   │   ├── repositories/
+│   │   └── migrations/
+│   └── interface/                    # DRF views, serializers, URL routing
+│       ├── views.py
+│       ├── serializers.py
+│       └── urls.py
+├── core/                             # Shared utilities, settings, middleware
+│   ├── settings/
+│   ├── middleware/
+│   └── utils/
+└── manage.py
 
 tests/
-├── contract/
-├── integration/
-└── unit/
-
-# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
-backend/
-├── src/
-│   ├── models/
-│   ├── services/
-│   └── api/
-└── tests/
-
-frontend/
-├── src/
-│   ├── components/
-│   ├── pages/
-│   └── services/
-└── tests/
-
-# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
-api/
-└── [same as backend above]
-
-ios/ or android/
-└── [platform-specific structure: feature modules, UI flows, platform tests]
+├── unit/                             # Domain logic tests (no Django dependencies)
+├── integration/                      # Use case tests with test database
+├── contract/                         # API endpoint tests (DRF TestClient)
+└── e2e/                              # Full user flow tests (optional)
 ```
 
 **Structure Decision**: [Document the selected structure and reference the real
