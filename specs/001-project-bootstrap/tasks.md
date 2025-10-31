@@ -19,16 +19,16 @@
 
 **Purpose**: Create foundational project structure and configuration files
 
-- [ ] T001 Create Django project structure with manage.py and pulsewatch/ package
-- [ ] T002 Create directory structure: core/, apps/, shared/, tests/, docker/, .github/workflows/
-- [ ] T003 [P] Initialize requirements/ directory with base.txt, dev.txt, prod.txt
-- [ ] T004 [P] Create .gitignore file excluding .env, __pycache__, *.pyc, .pytest_cache, htmlcov/
-- [ ] T005 [P] Create .env.example template with all required and optional environment variables per data-model.md
-- [ ] T006 [P] Create README.md with project overview and quickstart reference
-- [ ] T007 [P] Create Makefile with common development commands (up, down, test, migrate, etc.)
-- [ ] T008 [P] Create pyproject.toml with project metadata and tool configurations
-- [ ] T009 [P] Create pytest.ini with test discovery settings and coverage thresholds (85%)
-- [ ] T010 [P] Create mypy.ini with type checking strictness settings
+- [X] T001 Create Django project structure with manage.py and pulsewatch/ package
+- [X] T002 Create directory structure: core/, apps/, shared/, tests/, docker/, .github/workflows/
+- [X] T003 [P] Initialize requirements/ directory with base.txt, dev.txt, prod.txt
+- [X] T004 [P] Create .gitignore file excluding .env, __pycache__, *.pyc, .pytest_cache, htmlcov/
+- [X] T005 [P] Create .env.example template with all required and optional environment variables per data-model.md
+- [X] T006 [P] Create README.md with project overview and quickstart reference
+- [X] T007 [P] Create Makefile with common development commands (up, down, test, migrate, etc.)
+- [X] T008 [P] Create pyproject.toml with project metadata and tool configurations
+- [X] T009 [P] Create pytest.ini with test discovery settings and coverage thresholds (85%)
+- [X] T010 [P] Create mypy.ini with type checking strictness settings
 
 ---
 
