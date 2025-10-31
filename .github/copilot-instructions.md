@@ -41,3 +41,10 @@ When you see paths like `/[project]/features/[feature]/` in rules, replace [proj
 - Prefer composition over inheritance
 - Use context managers for resource management
 - Follow the Zen of Python principles
+
+## Active Technologies
+- Python 3.12 + Django 5.x, Django REST Framework 3.x, Celery 5.x, MySQL 8.x, Redis 7.x (001-project-bootstrap)
+- MySQL 8.x (InnoDB) with read replicas, Redis for caching/sessions (001-project-bootstrap)
+
+## Recent Changes
+- 001-project-bootstrap: Added Python 3.12 + Django 5.x, Django REST Framework 3.x, Celery 5.x, MySQL 8.x, Redis 7.x

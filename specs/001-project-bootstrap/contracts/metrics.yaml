@@ -1,0 +1,262 @@
+openapi: 3.0.3
+info:
+  title: PulseWatch Metrics API
+  description: |
+    Prometheus metrics endpoint for operational monitoring.
+    
+    Exposes application and infrastructure metrics in Prometheus text format
+    for scraping by Prometheus server.
+  version: 0.1.0
+  contact:
+    name: PulseWatch Team
+    email: dev@pulsewatch.io
+
+servers:
+  - url: http://localhost:8000
+    description: Local development
+  - url: https://api.pulsewatch.io
+    description: Production
+
+tags:
+  - name: metrics
+    description: Operational metrics for monitoring
+
+paths:
+  /metrics:
+    get:
+      tags:
+        - metrics
+      summary: Prometheus metrics endpoint
+      description: |
+        Exposes application metrics in Prometheus text format.
+        
+        **Metric Categories**:
+        - **HTTP Metrics**: Request counts, latencies, status codes
+        - **Database Metrics**: Query counts, connection pool stats
+        - **Cache Metrics**: Hit/miss rates, operation counts
+        - **Application Metrics**: Version info, health check status
+        
+        **Usage**: Configure Prometheus to scrape this endpoint every 15-30 seconds.
+      operationId: getMetrics
+      responses:
+        '200':
+          description: Metrics in Prometheus text format
+          content:
+            text/plain; version=0.0.4:
+              schema:
+                type: string
+                description: Prometheus text format metrics
+                example: |
+                  # HELP django_http_requests_total_by_method Total HTTP requests by method
+                  # TYPE django_http_requests_total_by_method counter
+                  django_http_requests_total_by_method{method="GET"} 150
+                  django_http_requests_total_by_method{method="POST"} 45
+                  
+                  # HELP django_http_responses_total_by_status Total HTTP responses by status code
+                  # TYPE django_http_responses_total_by_status counter
+                  django_http_responses_total_by_status{status="200"} 140
+                  django_http_responses_total_by_status{status="404"} 8
+                  django_http_responses_total_by_status{status="500"} 2
+                  
+                  # HELP django_http_request_duration_seconds HTTP request latency
+                  # TYPE django_http_request_duration_seconds histogram
+                  django_http_request_duration_seconds_bucket{method="GET",view="health",le="0.1"} 120
+                  django_http_request_duration_seconds_bucket{method="GET",view="health",le="0.5"} 150
+                  django_http_request_duration_seconds_bucket{method="GET",view="health",le="+Inf"} 150
+                  django_http_request_duration_seconds_sum{method="GET",view="health"} 12.3
+                  django_http_request_duration_seconds_count{method="GET",view="health"} 150
+                  
+                  # HELP django_db_query_duration_seconds Database query latency
+                  # TYPE django_db_query_duration_seconds histogram
+                  django_db_query_duration_seconds_bucket{vendor="mysql",alias="default",le="0.01"} 50
+                  django_db_query_duration_seconds_bucket{vendor="mysql",alias="default",le="0.1"} 90
+                  django_db_query_duration_seconds_bucket{vendor="mysql",alias="default",le="+Inf"} 100
+                  django_db_query_duration_seconds_sum{vendor="mysql",alias="default"} 2.5
+                  django_db_query_duration_seconds_count{vendor="mysql",alias="default"} 100
+                  
+                  # HELP django_db_execute_total Total database queries executed
+                  # TYPE django_db_execute_total counter
+                  django_db_execute_total{vendor="mysql",alias="default"} 100
+                  
+                  # HELP django_cache_get_total Total cache get operations
+                  # TYPE django_cache_get_total counter
+                  django_cache_get_total{backend="redis"} 250
+                  
+                  # HELP django_cache_hit_total Total cache hits
+                  # TYPE django_cache_hit_total counter
+                  django_cache_hit_total{backend="redis"} 200
+                  
+                  # HELP pulsewatch_app_info Application information
+                  # TYPE pulsewatch_app_info gauge
+                  pulsewatch_app_info{version="0.1.0"} 1
+                  
+                  # HELP pulsewatch_app_start_time_seconds Unix timestamp of application start
+                  # TYPE pulsewatch_app_start_time_seconds gauge
+                  pulsewatch_app_start_time_seconds 1698750600.123456
+                  
+                  # HELP pulsewatch_health_check_duration_seconds Health check execution time
+                  # TYPE pulsewatch_health_check_duration_seconds histogram
+                  pulsewatch_health_check_duration_seconds_bucket{check_name="database",le="0.01"} 15
+                  pulsewatch_health_check_duration_seconds_bucket{check_name="database",le="0.1"} 20
+                  pulsewatch_health_check_duration_seconds_bucket{check_name="database",le="+Inf"} 20
+                  pulsewatch_health_check_duration_seconds_sum{check_name="database"} 0.15
+                  pulsewatch_health_check_duration_seconds_count{check_name="database"} 20
+                  
+                  # HELP pulsewatch_health_check_status Health check status (1=healthy, 0=unhealthy)
+                  # TYPE pulsewatch_health_check_status gauge
+                  pulsewatch_health_check_status{check_name="database"} 1
+                  pulsewatch_health_check_status{check_name="redis"} 1
+
+components:
+  schemas:
+    PrometheusMetrics:
+      type: object
+      description: |
+        Prometheus text format is a line-based format with the following structure:
+        
+        ```
+        # HELP <metric_name> <description>
+        # TYPE <metric_name> <type>
+        <metric_name>{<label_name>="<label_value>",...} <value> [timestamp]
+        ```
+        
+        **Metric Types**:
+        - `counter`: Cumulative value that only increases (e.g., total requests)
+        - `gauge`: Value that can go up or down (e.g., current memory usage)
+        - `histogram`: Distribution of values with buckets (e.g., request latency)
+        - `summary`: Similar to histogram but with quantiles
+      properties:
+        django_http_requests_total_by_method:
+          type: object
+          description: Counter - Total HTTP requests grouped by method
+          properties:
+            labels:
+              type: object
+              properties:
+                method:
+                  type: string
+                  enum: [GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS]
+                  example: GET
+        
+        django_http_responses_total_by_status:
+          type: object
+          description: Counter - Total HTTP responses grouped by status code
+          properties:
+            labels:
+              type: object
+              properties:
+                status:
+                  type: string
+                  pattern: '^\d{3}$'
+                  example: '200'
+        
+        django_http_request_duration_seconds:
+          type: object
+          description: Histogram - HTTP request latency distribution
+          properties:
+            labels:
+              type: object
+              properties:
+                method:
+                  type: string
+                  example: GET
+                view:
+                  type: string
+                  example: health
+        
+        django_db_query_duration_seconds:
+          type: object
+          description: Histogram - Database query latency distribution
+          properties:
+            labels:
+              type: object
+              properties:
+                vendor:
+                  type: string
+                  example: mysql
+                alias:
+                  type: string
+                  example: default
+        
+        django_db_execute_total:
+          type: object
+          description: Counter - Total database queries executed
+          properties:
+            labels:
+              type: object
+              properties:
+                vendor:
+                  type: string
+                  example: mysql
+                alias:
+                  type: string
+                  example: default
+        
+        django_cache_get_total:
+          type: object
+          description: Counter - Total cache get operations
+          properties:
+            labels:
+              type: object
+              properties:
+                backend:
+                  type: string
+                  example: redis
+        
+        django_cache_hit_total:
+          type: object
+          description: Counter - Total cache hits
+          properties:
+            labels:
+              type: object
+              properties:
+                backend:
+                  type: string
+                  example: redis
+        
+        pulsewatch_app_info:
+          type: object
+          description: Gauge - Application information (always 1)
+          properties:
+            labels:
+              type: object
+              properties:
+                version:
+                  type: string
+                  example: '0.1.0'
+        
+        pulsewatch_app_start_time_seconds:
+          type: object
+          description: Gauge - Unix timestamp of application start
+          properties:
+            value:
+              type: number
+              example: 1698750600.123456
+        
+        pulsewatch_health_check_duration_seconds:
+          type: object
+          description: Histogram - Health check execution time
+          properties:
+            labels:
+              type: object
+              properties:
+                check_name:
+                  type: string
+                  enum: [database, redis]
+                  example: database
+        
+        pulsewatch_health_check_status:
+          type: object
+          description: Gauge - Health check status (1=healthy, 0=unhealthy)
+          properties:
+            labels:
+              type: object
+              properties:
+                check_name:
+                  type: string
+                  enum: [database, redis]
+                  example: database
+
+  securitySchemes: {}
+
+security: []

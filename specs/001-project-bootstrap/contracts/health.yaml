@@ -1,0 +1,239 @@
+openapi: 3.0.3
+info:
+  title: PulseWatch Health Check API
+  description: |
+    Health check endpoints for Kubernetes liveness and readiness probes.
+    
+    - `/healthz`: Liveness probe (basic process health)
+    - `/ready`: Readiness probe (dependency checks)
+  version: 0.1.0
+  contact:
+    name: PulseWatch Team
+    email: dev@pulsewatch.io
+
+servers:
+  - url: http://localhost:8000
+    description: Local development
+  - url: https://api.pulsewatch.io
+    description: Production
+
+tags:
+  - name: health
+    description: Health check operations
+
+paths:
+  /healthz:
+    get:
+      tags:
+        - health
+      summary: Liveness probe
+      description: |
+        Basic health check to verify the application process is running.
+        
+        **Use Case**: Kubernetes liveness probe to detect deadlocks or crashes.
+        
+        **Success Criteria**: Returns 200 if the process is alive (no dependency checks).
+      operationId: getLiveness
+      responses:
+        '200':
+          description: Application is alive
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LivenessResponse'
+              examples:
+                healthy:
+                  value:
+                    status: healthy
+                    timestamp: '2025-10-31T10:30:00.123456Z'
+                    version: '0.1.0'
+        '503':
+          description: Application is unhealthy (process cannot respond)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LivenessResponse'
+              examples:
+                unhealthy:
+                  value:
+                    status: unhealthy
+                    timestamp: '2025-10-31T10:30:00.123456Z'
+                    version: '0.1.0'
+
+  /ready:
+    get:
+      tags:
+        - health
+      summary: Readiness probe
+      description: |
+        Comprehensive readiness check to verify the application can serve traffic.
+        
+        **Use Case**: Kubernetes readiness probe to control traffic routing.
+        
+        **Checks Performed**:
+        - Database connectivity (MySQL)
+        - Cache connectivity (Redis)
+        
+        **Success Criteria**: Returns 200 if all dependency checks pass.
+      operationId: getReadiness
+      responses:
+        '200':
+          description: Application is ready to serve traffic
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReadinessResponse'
+              examples:
+                ready:
+                  value:
+                    status: ready
+                    timestamp: '2025-10-31T10:30:00.123456Z'
+                    version: '0.1.0'
+                    checks:
+                      database:
+                        status: healthy
+                        latency_ms: 5.23
+                        message: 'MySQL connection successful'
+                      redis:
+                        status: healthy
+                        latency_ms: 1.45
+                        message: 'Redis connection successful'
+        '503':
+          description: Application is not ready (one or more dependencies failed)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReadinessResponse'
+              examples:
+                not_ready_database:
+                  value:
+                    status: not_ready
+                    timestamp: '2025-10-31T10:30:00.123456Z'
+                    version: '0.1.0'
+                    checks:
+                      database:
+                        status: unhealthy
+                        latency_ms: 5000.0
+                        message: "OperationalError: (2003, \"Can't connect to MySQL server\")"
+                      redis:
+                        status: healthy
+                        latency_ms: 1.45
+                        message: 'Redis connection successful'
+                not_ready_redis:
+                  value:
+                    status: not_ready
+                    timestamp: '2025-10-31T10:30:00.123456Z'
+                    version: '0.1.0'
+                    checks:
+                      database:
+                        status: healthy
+                        latency_ms: 5.23
+                        message: 'MySQL connection successful'
+                      redis:
+                        status: unhealthy
+                        latency_ms: 2000.0
+                        message: 'ConnectionError: Error connecting to Redis'
+
+components:
+  schemas:
+    LivenessResponse:
+      type: object
+      required:
+        - status
+        - timestamp
+        - version
+      properties:
+        status:
+          type: string
+          enum:
+            - healthy
+            - unhealthy
+          description: Overall liveness status
+          example: healthy
+        timestamp:
+          type: string
+          format: date-time
+          description: ISO 8601 timestamp of the health check
+          example: '2025-10-31T10:30:00.123456Z'
+        version:
+          type: string
+          pattern: '^\d+\.\d+\.\d+$'
+          description: Semantic version of the application
+          example: '0.1.0'
+
+    ReadinessResponse:
+      type: object
+      required:
+        - status
+        - timestamp
+        - version
+        - checks
+      properties:
+        status:
+          type: string
+          enum:
+            - ready
+            - not_ready
+          description: |
+            Overall readiness status.
+            - `ready`: All dependency checks passed
+            - `not_ready`: One or more dependency checks failed
+          example: ready
+        timestamp:
+          type: string
+          format: date-time
+          description: ISO 8601 timestamp of the readiness check
+          example: '2025-10-31T10:30:00.123456Z'
+        version:
+          type: string
+          pattern: '^\d+\.\d+\.\d+$'
+          description: Semantic version of the application
+          example: '0.1.0'
+        checks:
+          type: object
+          description: Map of dependency health checks
+          additionalProperties:
+            $ref: '#/components/schemas/HealthCheckResult'
+          example:
+            database:
+              status: healthy
+              latency_ms: 5.23
+              message: 'MySQL connection successful'
+            redis:
+              status: healthy
+              latency_ms: 1.45
+              message: 'Redis connection successful'
+
+    HealthCheckResult:
+      type: object
+      required:
+        - status
+        - latency_ms
+        - message
+      properties:
+        status:
+          type: string
+          enum:
+            - healthy
+            - unhealthy
+            - degraded
+          description: |
+            Dependency health status.
+            - `healthy`: Check passed successfully
+            - `unhealthy`: Check failed (critical)
+            - `degraded`: Check passed with warnings (future use)
+          example: healthy
+        latency_ms:
+          type: number
+          format: float
+          minimum: 0
+          description: Execution time of the health check in milliseconds
+          example: 5.23
+        message:
+          type: string
+          description: Human-readable status message or error description
+          example: 'MySQL connection successful'
+
+  securitySchemes: {}
+
+security: []
